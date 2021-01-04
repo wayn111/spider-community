@@ -2,6 +2,8 @@ spring:
   devtools:
     restart:
       enabled: false
+  profiles:
+    active: dev
 
 # 日志配置
 logging:

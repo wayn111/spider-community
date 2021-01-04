@@ -22,7 +22,6 @@ public class TentMapUtil {
     public static JSONObject geocoder(String lon, String lat) {
         String params = "/ws/geocoder/v1/?key=" + KEY + "&location=39.984154,116.307490";
         String md5Hex = DigestUtils.md5DigestAsHex((params + SECRET_KEY).getBytes());
-        String hash = Md5Utils.hash(params + SECRET_KEY);
         params += "&sig=" + md5Hex;
         HttpGet httpGet = new HttpGet(HOST + params);
         HttpClient httpClient = HttpClientBuilder.create().build();

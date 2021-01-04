@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.pipeline.ConsolePipeline;
 import us.codecraft.webmagic.pipeline.JsonFilePipeline;
+import us.codecraft.webmagic.proxy.Proxy;
+import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 
 @SpringBootTest
 class CommunityApplicationTests {
@@ -20,6 +23,8 @@ class CommunityApplicationTests {
 
     @Test
     void contextLoads() {
+        HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("27.190.81.155", 251157, "", "")));
         Spider.create(anjukePageProcessor).addUrl("https://www.anjuke.com/sy-city.html").thread(5).run();
     }
 
