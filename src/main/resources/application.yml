@@ -1,0 +1,10 @@
+spring:
+  devtools:
+    restart:
+      enabled: false
+
+# 日志配置
+logging:
+  level:
+    org.apache.http: info
+    org.springframework: info
