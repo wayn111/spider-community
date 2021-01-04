@@ -24,8 +24,8 @@ class CommunityApplicationTests {
     @Test
     void contextLoads() {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("27.190.81.155", 251157, "", "")));
-        Spider.create(anjukePageProcessor).addUrl("https://www.anjuke.com/sy-city.html").thread(5).run();
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("140.255.44.224", 35644, "", "")));
+        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(5).run();
     }
 
 }

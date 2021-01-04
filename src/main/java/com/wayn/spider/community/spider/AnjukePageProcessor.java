@@ -1,9 +1,13 @@
 package com.wayn.spider.community.spider;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wayn.spider.community.core.entity.Community;
+import com.wayn.spider.community.core.service.CommunityService;
 import com.wayn.spider.community.util.Md5Utils;
 import com.wayn.spider.community.util.TentMapUtil;
+import jdk.nashorn.internal.ir.LiteralNode;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import sun.security.provider.MD5;
@@ -27,6 +32,8 @@ import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -36,6 +43,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AnjukePageProcessor implements PageProcessor {
+
+    @Autowired
+    private CommunityService communityService;
 
     private Site site = Site.me().setRetryTimes(1).setSleepTime(1000)
             .addHeader("cookie", "sessid=2159F266-CF2B-39FC-3533-210C3642B25B; aQQ_ajkguid=4BA9547C-273D-9088-F559-23F4A6991514; " +
@@ -61,6 +71,7 @@ public class AnjukePageProcessor implements PageProcessor {
             Selectable communityNameLonLat = page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href");
             // "//*[@id=\"list-content\"]/div[4]/div[1]/h3/a";
             List<String> communityNameLonLatList = communityNameLonLat.all();
+            List<Community> list = new ArrayList<>();
             for (String href : communityNameLonLatList) {
                 // /#l1=31.891564&l2=102.239196&l3=18&flag=1&commname=马江街300号院&commid=1428912
                 String temp = href.substring(href.lastIndexOf("/"));
@@ -72,7 +83,18 @@ public class AnjukePageProcessor implements PageProcessor {
                 JSONObject jsonObject = TentMapUtil.geocoder("116.307490", "39.984154");
                 Integer adcode = Integer.parseInt((String) jsonObject.getJSONObject("result").getJSONObject("ad_info").get("adcode"));
                 Integer cityCode = adcode / 100 * 100;
+                Community community = Community.builder()
+                        .communityName(communityName)
+                        .cityCode(cityCode)
+                        .areaId(adcode)
+                        .communityLongitude(new BigDecimal(lon))
+                        .communityLatitude(new BigDecimal(lat))
+                        .communityLetter(letter)
+                        .communityPid(0L)
+                        .build();
+                list.add(community);
             }
+            communityService.saveBatch(list);
         }
     }
 
@@ -81,10 +103,10 @@ public class AnjukePageProcessor implements PageProcessor {
         return site;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("27.190.81.155", 251157, "", "")));
-        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").thread(5).run();
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("58.62.115.251", 36249, "", "")));
+        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(5).run();
         // JSONObject jsonObject = TentMapUtil.geocoder("116.307490", "39.984154");
         // System.out.println(jsonObject.getJSONObject("result").getJSONObject("ad_info").get("adcode"));
     }
