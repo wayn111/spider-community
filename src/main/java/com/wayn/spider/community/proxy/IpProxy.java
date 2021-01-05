@@ -16,25 +16,8 @@ import java.io.IOException;
 @Component
 public class IpProxy {
 
-    public JSONArray getWanbianProxyPool() {
-        HttpGet httpGet = new HttpGet("http://ip.ipjldl.com/index.php/api/entry?method=proxyServer.tiqu_api_url&packid=0&fa=0&dt=0&groupid=0&fetch_key=&qty=1&time=1&port=1&format=json&ss=5&css=&dt=0&pro=&city=&usertype=6");
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpResponse response;
-        try {
-            response = httpClient.execute(httpGet);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String strResult = EntityUtils.toString(response.getEntity());
-                return JSONObject.parseObject(strResult).getJSONArray("data");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public Proxy wanbianProxy() {
-        HttpGet httpGet = new HttpGet("http://ip.ipjldl.com/index.php/api/entry?method=proxyServer.tiqu_api_url&packid=0&fa=0&dt=0&groupid=0&fetch_key=&qty=1&time=1&port=1&format=json&ss=5&css=&dt=0&pro=&city=&usertype=6");
+        HttpGet httpGet = new HttpGet("http://ip.ipjldl.com/index.php/api/entry?method=proxyServer.tiqu_api_url&packid=1&fa=0&dt=&groupid=0&fetch_key=&qty=1&time=1&port=1&format=json&ss=5&css=&dt=&pro=&city=&usertype=6");
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse response;
         try {

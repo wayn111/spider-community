@@ -23,19 +23,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * github爬虫demo
+ * 安居客爬虫
  */
 @Slf4j
 @Component
 public class AnjukePageProcessor implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(5).setSleepTime(500)
-            .addHeader("cookie", "sessid=2159F266-CF2B-39FC-3533-210C3642B25B; aQQ_ajkguid=4BA9547C-273D-9088-F559-23F4A6991514; id58=e87rkF/tOPuT64v1INMnAg==; wmda_uuid=f75da04daa1039d0cb667d430d852b51; wmda_new_uuid=1; wmda_visited_projects=%3B6289197098934; _ga=GA1.2.1576678061.1609382138; 58tj_uuid=1d03e93f-c8ef-48d5-b288-ad8649ba82dc; als=0; __xsptplus8=8.1.1609382147.1609382250.4%234%7C%7C%7C%7C%7C%23%234qWjM5r_jI4xUz7CVw6lEheKztvA8lrt%23; cmctid=9617; twe=2; _gid=GA1.2.2096740622.1609731672; xxzl_cid=af8e8c604de44b3e8309343b5a623b26; xzuid=cc588bee-c3ef-4f5c-8067-a64e698d2326")
+    private Site site = Site.me().setRetryTimes(5).setSleepTime(400)
+            .addHeader("cookie", "aQQ_ajkguid=7CE62195-F606-2000-67CE-D770468EF2E4; id58=e87rkF/zLKOZl9w7C9yVAg==; _ga=GA1.2.343527993.1609772195; _gid=GA1.2.1995531441.1609772195; 58tj_uuid=ce6ba613-b165-4006-b7db-b631914ba065; als=0; ajk_member_verify=ogyMnTXfMI1rXIV5l79nDqUNoboBSt8sGYrTUF9qJH8%3D; ajk_member_verify2=MjEwNzE0NDQwfFVsTmQ2VFd8MQ%3D%3D; twe=2; ctid=168; sessid=D4DD5546-0402-8B70-892E-CX0105211244; init_refer=https%253A%252F%252Fwww.anjuke.com%252F; new_uv=3; wmda_uuid=900fadfda89104236289e4945db23b34; wmda_new_uuid=1; wmda_session_id_6289197098934=1609852365079-3ae98fb2-0b51-f01e; wmda_visited_projects=%3B6289197098934; new_session=0; obtain_by=1; ajkAuthTicket=TT=40da82c520c87dc9d73798a3d4bbc849&TS=1609852384975&PBODY=lhKIa8ZEonUCG1yBlOkg35hw8h4w0ScpCkkcM72fxRtiruoz2Y3YZ8PYZPP6h1y6BTwHNIT2a1JJKRyVh6jRq_tPRq0HLAOwIiLOBAah-JDFXNE2dRLQxW5mvOyRjtvtuC7ZObL5d86FWtrkyVDLWkkxHhtoiNCDaCDWH42PNv4&VER=2; xxzl_cid=97c47a78b41943b6ae229a425853c222; xzuid=759efd79-8861-4acb-a180-d9148bf5860c")
             .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
-            .addHeader(":authority", "document")
+            .addHeader(":authority", "anqing.anjuke.com")
             .addHeader("sec-fetch-dest", "sec-fetch-dest")
             .addHeader("sec-fetch-user", "?1")
-            .addHeader("referer", "https://login.anjuke.com/");
+            .addHeader("sec-ch-ua", "\"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"");
 
     public static void main(String[] args) {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
@@ -47,7 +47,7 @@ public class AnjukePageProcessor implements PageProcessor {
      * 获取汉字拼音首字母
      *
      * @param str
-     * @return
+     * @return 返回汉字拼音首字母
      */
     public static String getPinYinHeadChar(String str) {
         String convert = "";

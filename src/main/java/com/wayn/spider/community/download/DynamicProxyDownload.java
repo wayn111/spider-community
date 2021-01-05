@@ -87,7 +87,7 @@ public class DynamicProxyDownload extends AbstractDownloader {
                 if (!"0".equals(page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get())) {
                     if (null == page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href").get()
                             || null == page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get()) {
-                        logger.warn(request.getUrl() + " 代理:" + proxy + " 已经被限制！，重新获取代理IP");
+                        logger.warn(request.getUrl() + " 代理:" + proxy + " 已经被限制！重新获取代理IP");
                         // page.setDownloadSuccess(false);
                         onError(request);
                         setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
