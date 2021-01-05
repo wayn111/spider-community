@@ -84,7 +84,7 @@ public class DynamicProxyDownload extends AbstractDownloader {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             page = handleResponse(request, request.getCharset() != null ? request.getCharset() : task.getSite().getCharset(), httpResponse, task);
             if (!page.getUrl().get().startsWith("https://www.anjuke.com/")) {
-                if (!page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get().equals("0")) {
+                if (!"0".equals(page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get())) {
                     if (null == page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href").get()
                             || null == page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get()) {
                         logger.warn(request.getUrl() + " 代理:" + proxy + " 已经被限制！，重新获取代理IP");
