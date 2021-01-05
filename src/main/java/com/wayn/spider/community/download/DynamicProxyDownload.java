@@ -84,11 +84,15 @@ public class DynamicProxyDownload extends AbstractDownloader {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             page = handleResponse(request, request.getCharset() != null ? request.getCharset() : task.getSite().getCharset(), httpResponse, task);
             if (!page.getUrl().get().startsWith("https://www.anjuke.com/")) {
-                if (null == page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href").get()) {
-                    logger.warn(proxy.toString() + " 已经被限制！，重新获取代理IP");
-                    setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
-                    onError(request);
-                    return page;
+                if (!page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get().equals("0")) {
+                    if (null == page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href").get()
+                            || null == page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get()) {
+                        logger.warn(request.getUrl() + " 代理:" + proxy + " 已经被限制！，重新获取代理IP");
+                        // page.setDownloadSuccess(false);
+                        onError(request);
+                        setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
+                        return download(request, task);
+                    }
                 }
             }
             onSuccess(request);
@@ -96,9 +100,10 @@ public class DynamicProxyDownload extends AbstractDownloader {
             return page;
         } catch (IOException e) {
             logger.warn("download page {} error, 重新获取代理IP", request.getUrl(), e);
+            // page.setDownloadSuccess(false);
             setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
             onError(request);
-            return page;
+            return download(request, task);
         } finally {
             if (httpResponse != null) {
                 //ensure the connection is released back to pool
@@ -144,9 +149,6 @@ public class DynamicProxyDownload extends AbstractDownloader {
             logger.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
         }
         return charset;
-    }
-
-    public DynamicProxyDownload() {
     }
 
     public DynamicProxyDownload(IpProxy ipProxy) {

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Component
 public class AnjukePageProcessor implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(5).setSleepTime(600)
+    private Site site = Site.me().setRetryTimes(5).setSleepTime(500)
             .addHeader("cookie", "sessid=2159F266-CF2B-39FC-3533-210C3642B25B; aQQ_ajkguid=4BA9547C-273D-9088-F559-23F4A6991514; id58=e87rkF/tOPuT64v1INMnAg==; wmda_uuid=f75da04daa1039d0cb667d430d852b51; wmda_new_uuid=1; wmda_visited_projects=%3B6289197098934; _ga=GA1.2.1576678061.1609382138; 58tj_uuid=1d03e93f-c8ef-48d5-b288-ad8649ba82dc; als=0; __xsptplus8=8.1.1609382147.1609382250.4%234%7C%7C%7C%7C%7C%23%234qWjM5r_jI4xUz7CVw6lEheKztvA8lrt%23; cmctid=9617; twe=2; _gid=GA1.2.2096740622.1609731672; xxzl_cid=af8e8c604de44b3e8309343b5a623b26; xzuid=cc588bee-c3ef-4f5c-8067-a64e698d2326")
             .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
             .addHeader(":authority", "document")

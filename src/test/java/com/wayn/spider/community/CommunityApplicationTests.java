@@ -34,18 +34,9 @@ class CommunityApplicationTests {
 
     @Test
     void contextLoads() {
-        JSONArray wanbianProxyPool = ipProxy.getWanbianProxyPool();
-        List<Proxy> proxyList = new ArrayList<>();
-        for (Object o : wanbianProxyPool) {
-            JSONObject jsonObject = (JSONObject) o;
-            Proxy proxy = new Proxy((String) jsonObject.get("IP"),
-                    (Integer) jsonObject.get("Port"));
-            proxyList.add(proxy);
-        }
         DynamicProxyDownload httpClientDownloader = new DynamicProxyDownload(ipProxy);
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(proxyList.toArray(new Proxy[]{})));
-
-        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(15).run();
+        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(10).run();
+        // Spider.create(new AnjukePageProcessor()).addUrl("https://ali.anjuke.com/community/p1/").setDownloader(httpClientDownloader).thread(1).run();
     }
 
 }
