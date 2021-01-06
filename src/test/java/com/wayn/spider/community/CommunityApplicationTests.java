@@ -1,8 +1,11 @@
 package com.wayn.spider.community;
 
-import com.wayn.spider.community.download.DynamicProxyDownload;
-import com.wayn.spider.community.proxy.IpProxy;
+import com.wayn.spider.community.constant.Constant;
+import com.wayn.spider.community.download.AbstractDynamicProxyDownload;
+import com.wayn.spider.community.download.AnjukeDynamicProxyDownload;
+import com.wayn.spider.community.proxy.WanbianIpProxy;
 import com.wayn.spider.community.spider.AnjukePageProcessor;
+import com.wayn.spider.community.util.TencentMapUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +19,17 @@ import us.codecraft.webmagic.Spider;
 @SpringBootTest(classes = CommunityApplication.class)
 @EnableAutoConfiguration
 class CommunityApplicationTests {
+
     @Autowired
     private AnjukePageProcessor anjukePageProcessor;
+
     @Autowired
-    private IpProxy ipProxy;
+    private WanbianIpProxy ipProxy;
 
     @Test
     void contextLoads() {
-        DynamicProxyDownload httpClientDownloader = new DynamicProxyDownload(ipProxy);
-        Spider.create(anjukePageProcessor).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(30).run();
-        // Spider.create(new AnjukePageProcessor()).addUrl("https://ali.anjuke.com/community/p1/").setDownloader(httpClientDownloader).thread(1).run();
+        AbstractDynamicProxyDownload httpClientDownloader = new AnjukeDynamicProxyDownload(ipProxy);
+        Spider.create(anjukePageProcessor).addUrl(Constant.ANJUKE_CITY_LIST_URL).setDownloader(httpClientDownloader).thread(3).run();
     }
 
 }

@@ -22,3 +22,13 @@ mybatis-plus:
   typeAliasesPackage: com.wayn.**.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
+
+ipProxy:
+  wanbian:
+    api: xxx
+
+tencent:
+  map:
+    host: https://apis.map.qq.com
+    key: xxx
+    secretKey: xxx

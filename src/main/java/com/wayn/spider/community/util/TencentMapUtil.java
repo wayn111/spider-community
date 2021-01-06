@@ -7,20 +7,51 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 import java.io.IOException;
 
+@Component
 public class TencentMapUtil {
-    public static final String HOST = "https://apis.map.qq.com";
-    public static final String KEY = "HMCBZ-NBLK3-I6J37-YV6XE-FA4FT-BSFTX";
-    public static final String SECRET_KEY = "xx2TvMFRFYsEveDwUN57fnpfrnRvaTKq";
+
+    private static String host;
+    private static String key;
+    private static String secretKey;
+
+    public static String getHost() {
+        return host;
+    }
+
+    @Value("${tencent.map.host}")
+    public void setHost(String host) {
+        TencentMapUtil.host = host;
+    }
+
+    public static String getKey() {
+        return key;
+    }
+
+    @Value("${tencent.map.key}")
+    public void setKey(String key) {
+        TencentMapUtil.key = key;
+    }
+
+    public static String getSecretKey() {
+        return secretKey;
+    }
+
+    @Value("${tencent.map.secretKey}")
+    public void setSecretKey(String secretKey) {
+        TencentMapUtil.secretKey = secretKey;
+    }
 
     public static JSONObject geocoder(String lon, String lat) {
-        String params = "/ws/geocoder/v1/?key=" + KEY + "&location=" + lat + "," + lon;
-        String md5Hex = DigestUtils.md5DigestAsHex((params + SECRET_KEY).getBytes());
+        String params = "/ws/geocoder/v1/?key=" + key + "&location=" + lat + "," + lon;
+        String md5Hex = DigestUtils.md5DigestAsHex((params + secretKey).getBytes());
         params += "&sig=" + md5Hex;
-        HttpGet httpGet = new HttpGet(HOST + params);
+        HttpGet httpGet = new HttpGet(host + params);
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse response;
         try {

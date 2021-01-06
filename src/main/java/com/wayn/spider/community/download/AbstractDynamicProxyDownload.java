@@ -1,13 +1,12 @@
 package com.wayn.spider.community.download;
 
-import com.wayn.spider.community.proxy.IpProxy;
+import com.wayn.spider.community.proxy.IpProxyInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
@@ -28,19 +27,21 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DynamicProxyDownload extends AbstractDownloader {
+/**
+ * 动态代理下载器
+ */
+@Slf4j
+public abstract class AbstractDynamicProxyDownload extends AbstractDownloader {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Map<String, CloseableHttpClient> httpClients = new HashMap<>();
 
-    private final Map<String, CloseableHttpClient> httpClients = new HashMap<String, CloseableHttpClient>();
-
-    private HttpClientGenerator httpClientGenerator = new HttpClientGenerator();
+    private final HttpClientGenerator httpClientGenerator = new HttpClientGenerator();
 
     private HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
 
     private ProxyProvider proxyProvider;
 
-    private IpProxy ipProxy;
+    private final IpProxyInterface ipProxyInterface;
 
     private boolean responseHeader = true;
 
@@ -83,25 +84,20 @@ public class DynamicProxyDownload extends AbstractDownloader {
         try {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             page = handleResponse(request, request.getCharset() != null ? request.getCharset() : task.getSite().getCharset(), httpResponse, task);
-            if (!page.getUrl().get().startsWith("https://www.anjuke.com/")) {
-                if (!"0".equals(page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get())) {
-                    if (null == page.getHtml().xpath("//*[@id=\"list-content\"]/div/div[1]/p[2]/a[1]/@href").get()
-                            || null == page.getHtml().xpath("//*[@id=\"list-content\"]/div[1]/span/em[2]/text()").get()) {
-                        logger.warn(request.getUrl() + " 代理:" + proxy + " 已经被限制！重新获取代理IP");
-                        // page.setDownloadSuccess(false);
-                        onError(request);
-                        setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
-                        return download(request, task);
-                    }
-                }
+            if (!ipProxyValidate(page)) {
+                log.warn("validate page {} error, 代理:" + proxy + " 已经被限制！重新获取代理IP", request.getUrl());
+                // page.setDownloadSuccess(false);
+                onError(request);
+                setProxyProvider(SimpleProxyProvider.from(ipProxyInterface.getProxy()));
+                return download(request, task);
             }
             onSuccess(request);
-            logger.info("downloading page success {}", request.getUrl());
+            log.info("downloading page success {}", request.getUrl());
             return page;
         } catch (IOException e) {
-            logger.warn("download page {} error, 重新获取代理IP", request.getUrl(), e);
+            log.warn("download page {} error, 代理:" + proxy + " 无响应！重新获取代理IP", request.getUrl());
             // page.setDownloadSuccess(false);
-            setProxyProvider(SimpleProxyProvider.from(ipProxy.wanbianProxy()));
+            setProxyProvider(SimpleProxyProvider.from(ipProxyInterface.getProxy()));
             onError(request);
             return download(request, task);
         } finally {
@@ -146,12 +142,30 @@ public class DynamicProxyDownload extends AbstractDownloader {
         String charset = CharsetUtils.detectCharset(contentType, contentBytes);
         if (charset == null) {
             charset = Charset.defaultCharset().name();
-            logger.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
+            log.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
         }
         return charset;
     }
 
-    public DynamicProxyDownload(IpProxy ipProxy) {
-        this.ipProxy = ipProxy;
+    /**
+     * 检验ip代理是否可用
+     *
+     * @param page page对象
+     * @return boolean
+     */
+    abstract protected boolean ipProxyValidate(Page page);
+
+    public AbstractDynamicProxyDownload(IpProxyInterface ipProxyInterface) {
+        this.ipProxyInterface = ipProxyInterface;
+    }
+
+    @Override
+    protected void onSuccess(Request request) {
+        super.onSuccess(request);
+    }
+
+    @Override
+    protected void onError(Request request) {
+        super.onError(request);
     }
 }
