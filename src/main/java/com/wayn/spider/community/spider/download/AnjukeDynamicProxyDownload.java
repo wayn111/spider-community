@@ -1,7 +1,7 @@
-package com.wayn.spider.community.download;
+package com.wayn.spider.community.spider.download;
 
 import com.wayn.spider.community.constant.Constant;
-import com.wayn.spider.community.proxy.IpProxyInterface;
+import com.wayn.spider.community.spider.proxy.IpProxyInterface;
 import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 

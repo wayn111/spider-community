@@ -1,4 +1,4 @@
-package com.wayn.spider.community.proxy;
+package com.wayn.spider.community.spider.proxy;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

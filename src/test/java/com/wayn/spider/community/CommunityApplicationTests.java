@@ -1,11 +1,10 @@
 package com.wayn.spider.community;
 
 import com.wayn.spider.community.constant.Constant;
-import com.wayn.spider.community.download.AbstractDynamicProxyDownload;
-import com.wayn.spider.community.download.AnjukeDynamicProxyDownload;
-import com.wayn.spider.community.proxy.WanbianIpProxy;
-import com.wayn.spider.community.spider.AnjukePageProcessor;
-import com.wayn.spider.community.util.TencentMapUtil;
+import com.wayn.spider.community.spider.download.AbstractDynamicProxyDownload;
+import com.wayn.spider.community.spider.download.AnjukeDynamicProxyDownload;
+import com.wayn.spider.community.spider.processor.AnjukePageProcessor;
+import com.wayn.spider.community.spider.proxy.WanbianIpProxy;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

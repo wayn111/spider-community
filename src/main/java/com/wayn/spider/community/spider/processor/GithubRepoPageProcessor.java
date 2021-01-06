@@ -1,4 +1,4 @@
-package com.wayn.spider.community.spider;
+package com.wayn.spider.community.spider.processor;
 
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
