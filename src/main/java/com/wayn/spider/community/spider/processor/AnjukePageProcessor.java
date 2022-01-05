@@ -39,9 +39,7 @@ public class AnjukePageProcessor implements PageProcessor {
             .addHeader("sec-ch-ua", "\"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"");
 
     public static void main(String[] args) {
-        HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("localhost", 10080, "", "")));
-        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").setDownloader(httpClientDownloader).thread(5).run();
+        Spider.create(new AnjukePageProcessor()).addUrl("https://www.anjuke.com/sy-city.html").thread(5).run();
     }
 
 
@@ -122,7 +120,7 @@ public class AnjukePageProcessor implements PageProcessor {
                 list.add(community);
             }
             CommunityService communityService = SpringContextUtil.getBean(CommunityService.class);
-            communityService.saveBatch(list);
+            // communityService.saveBatch(list);
         }
     }
 
